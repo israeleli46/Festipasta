@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+ 
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+model Client {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  prenom    String
+  nom       String?
+  email     String   @unique
+  phone     String
+  typebillet  String
+  qte Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Activite {
+  Artinasat
+  Divertissement
+  Autre
+}
+enum Type {
+  Classic
+  Confort
+  Premium
+}
+model Stand {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  structure String?
+  prenom    String
+  nom       String
+  adress String
+  lien String
+  email     String   @unique
+  phone     String
+  activite Activite
+  typstand Type
+  prix  Int
+  nbrStandist Int
+  electricite Boolean
+  besoin String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  nom       String
+  email     String
+  sujet     String
+  message   String
+  createdAt DateTime @default(now())
+}
