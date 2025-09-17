@@ -96,7 +96,7 @@ const FestivalHeader = () => {
                   Réserver
                 </Button>
               </Link>
-              <Link id="stands-button" href="/Stands">
+              <Link id="stands-button" href="/stand">
                 <Button variant="ghost" size="sm" className="w-full mt-2 text-festival-grey hover:text-festival-green transition-colors" onClick={() => setChoose(!choose)}>
                   Réserver votre stand
                 </Button>
