@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
+    
     console.log('it does')
     e.preventDefault();
     await signIn("credentials", {

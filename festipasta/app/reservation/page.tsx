@@ -102,7 +102,7 @@ const Reservation = () => {
       }, 3000);
   } else {
     console.error("Erreur lors de la réservation ❌")
-    toast.error("Erreur lors de la réservation ❌")
+    toast.error("Cet email est déjà utilisé ! ❌")
   }
    
     console.log("Données de réservation:", data);

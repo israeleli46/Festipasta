@@ -40,7 +40,9 @@ if (existing) {
 catch (error) {
         console.error("❌ Erreur Prisma :", error)
     return NextResponse.json(
-      { error: "Impossible de créer la réservation", details: error },
+      { error: "Impossible de créer la réservation. Cet email est déjà utilisé !"
+        
+        , details: error },
       { status: 500 }
     )
     }
