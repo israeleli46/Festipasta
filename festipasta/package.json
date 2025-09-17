@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-   "vercel-build": "next build || echo 'Build errors ignored'"
+   "vercel-build": "next build --no-lint"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
