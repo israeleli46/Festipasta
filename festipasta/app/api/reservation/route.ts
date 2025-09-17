@@ -46,7 +46,7 @@ catch (error) {
     }
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
    try {
     
 
