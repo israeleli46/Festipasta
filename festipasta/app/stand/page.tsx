@@ -6,14 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Ticket, Star, Users, Check } from "lucide-react";
+import { toast } from "sonner"
 
-import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import Footer from "@/components/Footer";
-import FestivalHeader from "@/components/FestivalHeader";
+import Link from "next/link";
+
 
 interface ReservationStandForm {
   structure: string;
@@ -27,7 +28,8 @@ interface ReservationStandForm {
     autrebesoin?: string;
     activite:string;
     typstand:string;
-    nbrStandist:number;
+    prixstand?:number;
+    nbrStandist:string;
     electricite: boolean;
     besoin:string;
 }
@@ -35,7 +37,7 @@ interface ReservationStandForm {
 const ReservationStand = () => {
   const [selectedTicket, setSelectedTicket] = useState("");
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<ReservationStandForm>();
-  const { toast } = useToast();
+  const router = useRouter();
 
 const [valid, setValid] = useState(false);
 
@@ -95,13 +97,29 @@ const [valid, setValid] = useState(false);
   ]
   
 
-  const onSubmit = (data: ReservationStandForm) => {
-    console.log("Données de réservation:", data);
-    toast({
-      title: "Réservation de stand confirmée !",
-      description: "Votre demande de réservation a été envoyée avec succès. Vous recevrez une confirmation par email.",
-    });
-    // Réinitialiser le formulaire après soumission
+  const onSubmit =async (data: ReservationStandForm) => {
+     const res = await fetch("/api/stand", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+  if (res.ok) {
+     setTimeout(() => {
+        router.push("/");
+      }, 3000);
+      
+      console.log("Données de réservation:", data);
+    toast.success(
+      `Réservation de stand confirmée ✅
+      Merci ${data.structure} pour votre réservation de Stand.
+       Un email de confirmation vous a été envoyé.`
+    )
+    
+  }
+  else {
+    toast.error("Erreur lors de la réservation ❌")}
+  
+    
   };
    const selectedStand = watch("typstand")
   const standDetails = StandCategorie.find((s) => s.name === selectedStand)
@@ -111,14 +129,14 @@ const [valid, setValid] = useState(false);
   return (
     <div className=" h-full bg-[url('/StandResv.png')]" id="stands">
       {/* Header */}
-      <header className="bg-white border-b border-festival-grey-light">
+    {/* Header */}
+      <header className="bg-white border-b border-festival-grey-light ">
         <div className="container mx-auto px-4 py-4">
-          {/* <Link to="/" className="inline-flex items-center gap-2 text-festival-green hover:text-festival-green-dark transition-colors">
+          <Link href="/" className="inline-flex items-center gap-2 text-festival-green hovner:text-festival-green-dark transition-colors">
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Retour au festival</span>
-          </Link> */}
+          </Link>
         </div>
-        <FestivalHeader/>
       </header>
       {/* Reservation stand Content */}
       
@@ -245,14 +263,18 @@ const [valid, setValid] = useState(false);
                      <div className="space-y-2">
                       <Label htmlFor="type">Type de stand *</Label>
                      <Select onValueChange={(value) => {
-    setValue("typstand", value);
+   const selectedItem = JSON.parse(value);
+   selectedItem.prix = Number(selectedItem.prix);
+  setValue("typstand", selectedItem.name);
+  setValue("prixstand", selectedItem.prix);
+
   }}>
                         <SelectTrigger>
                           <SelectValue placeholder="Sélectionner le stand qui vous convient" />
                         </SelectTrigger>
                         <SelectContent>
                           { StandCategorie.map((id) => (
-                            <SelectItem key={id.id} value={id.name.toString()}>
+                            <SelectItem key={id.id} value={JSON.stringify({ name: id.name, prix: id.prix })}>
                               {id.name}
                               <h2 className="text-gray-400">{id.prix} FCFA</h2>
                             </SelectItem>
@@ -295,7 +317,7 @@ const [valid, setValid] = useState(false);
                     </h1>
                   <div className="space-y-3 mb-3">
                       <Label htmlFor="nbrStandist"> Nombres de personnes dans le stand</Label>
-                     <Select onValueChange={(value) => setValue("nbrStandist", value as unknown as number)}>
+                     <Select onValueChange={(value) => setValue("nbrStandist", value)}>
                         <SelectTrigger>
                           <SelectValue placeholder="Sélectionner le nombre de personnes" />
                         </SelectTrigger>

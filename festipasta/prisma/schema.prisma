@@ -24,26 +24,26 @@ enum Activite {
   Divertissement
   Autre
 }
-enum Type {
-  Classic
+enum Type  {
+  Classic 
   Confort
   Premium
 }
 model Stand {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   structure String?
-  prenom    String
+  
   nom       String
   adress String
   lien String
   email     String   @unique
   phone     String
-  activite Activite
-  typstand Type
+ 
+
   prix  Int
-  nbrStandist Int
+  nbrStandist String
   electricite Boolean
-  besoin String
+  besoin String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -55,4 +55,13 @@ model Message {
   sujet     String
   message   String
   createdAt DateTime @default(now())
+}
+model User {
+   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  email     String   @unique
+  password  String
+  role      String   @default("admin") // "user" ou "admin"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

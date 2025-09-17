@@ -1,10 +1,44 @@
+"use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, Users, Trophy, Send } from "lucide-react";
+import { toast } from "sonner"
+import { useForm } from "react-hook-form";
+
+
+interface MessageFormData {
+  nom: string;
+  email: string;
+  sujet: string;
+  message: string;
+
+}
+
+
+  const onSubmit =async (data: MessageFormData) => {
+    const res = await fetch("/api/message", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+
+  if (res.ok) {
+ 
+      console.log("Données de réservation:", data);
+    toast.success("votre message a bien ete envoyé✅")
+  }
+  else {
+    toast.error("Erreur lors de l'envoi du message ❌")}
+  
+   
+    console.log("Données de réservation:", data);
+  
+  };
 
 const ContactSection = () => {
+   const { register, handleSubmit, reset } = useForm<MessageFormData>();
   const contacts = [
     {
       icon: Mail,
@@ -91,19 +125,20 @@ const ContactSection = () => {
             
             <Card className="border-0 shadow-card">
               <CardContent className="p-8">
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">
                         Nom complet
                       </label>
-                      <Input placeholder="Votre nom" className="border-festival-grey-light" />
+                      <Input placeholder="Votre nom" className="border-festival-grey-light" id="nom"
+                       {...register("nom")}/>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">
                         Email
                       </label>
-                      <Input type="email" placeholder="votre@email.com" className="border-festival-grey-light" />
+                      <Input id="email" type="email" placeholder="votre@email.com" className="border-festival-grey-light" {...register("email")}/>
                     </div>
                   </div>
                   
@@ -111,21 +146,22 @@ const ContactSection = () => {
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Sujet
                     </label>
-                    <Input placeholder="Objet de votre message" className="border-festival-grey-light" />
+                    <Input  id='sujet' placeholder="Objet de votre message" className="border-festival-grey-light" {...register("sujet")}/>
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Message
                     </label>
-                    <Textarea 
+                    <Textarea id="message"
                       placeholder="Votre message..." 
                       rows={5}
                       className="border-festival-grey-light resize-none"
+                      {...register("message")}
                     />
                   </div>
                   
-                  <Button variant="festival" size="lg" className="w-full">
+                  <Button variant="festival" size="lg" className="w-full" type="submit" >
                     <Send className="w-5 h-5 mr-2" />
                     Envoyer le message
                   </Button>

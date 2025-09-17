@@ -3,11 +3,13 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { badgeVariants } from "./ui/badge";
+import { useSession ,signOut} from "next-auth/react";
+import { Lock } from "lucide-react";
 
 const FestivalHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [choose, setChoose] = useState(false);
+ const { data: session } = useSession();
 
   const navItems = [
   
@@ -48,6 +50,22 @@ const FestivalHeader = () => {
                 Réserver votre stand
               </Button>
             </Link>
+           
+        {session ? (
+        <div>
+          Bonjour {session.user?.name} !
+          
+          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm" onClick={() => signOut()}>Déconnexion</Button>
+          
+        </div>
+      ) : (
+        <div>
+          <Link href="/admin">
+          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm">Admin <Lock size={18} /></Button></Link>
+        </div>
+      )}
+        
+            
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,6 +101,19 @@ const FestivalHeader = () => {
                   Réserver votre stand
                 </Button>
               </Link>
+               {session ? (
+        <div className="text-center mt-3">
+          Bonjour {session.user?.name} !
+          
+          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm" onClick={() => signOut()}>Déconnexion</Button>
+          
+        </div>
+      ) : (
+        <div className="text-center mt-4 ">
+          <Link href="/admin">
+          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm">Admin <Lock size={12} /></Button></Link>
+        </div>
+      )}
             </div>
            
           </div>

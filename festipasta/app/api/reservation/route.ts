@@ -11,10 +11,14 @@ const existing = await prisma.client.findUnique({
 });
 
 if (existing) {
+  
   return new Response(
+    
     JSON.stringify({ error: "Cet email est déjà utilisé !" }),
-    { status: 400 }
+    { status: 400 },
+    
   );
+  
 }
 
   const reservation = await prisma.client.create({
@@ -30,9 +34,10 @@ if (existing) {
   })
   console.log(body)
 
-  return Response.json({data:reservation}) 
+  return NextResponse.json({data:reservation}) 
  
-} catch (error) {
+} 
+catch (error) {
         console.error("❌ Erreur Prisma :", error)
     return NextResponse.json(
       { error: "Impossible de créer la réservation", details: error },
@@ -41,7 +46,17 @@ if (existing) {
     }
 }
 
-export async function GET() {
-  const reservations = await prisma.client.findMany()
-  return NextResponse.json(reservations)
+export async function GET(req: Request) {
+   try {
+    
+
+    const reservations = await prisma.client.findMany({
+    orderBy: { createdAt: "desc" }, // filtrage ici
+    });
+
+    return NextResponse.json(reservations);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
 }

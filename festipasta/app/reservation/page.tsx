@@ -9,9 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Ticket, Star, Users, Check } from "lucide-react";
 import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
-
+import { toast } from "sonner"
+import { useRouter } from "next/navigation";
 
 
 
@@ -27,8 +27,8 @@ interface ReservationForm {
 const Reservation = () => {
   const [selectedTicket, setSelectedTicket] = useState("");
    const { register,handleSubmit, setValue, watch, formState: { errors } } = useForm<ReservationForm>();
-  const { toast } = useToast();
   
+    const router = useRouter();
 
 
 
@@ -83,21 +83,26 @@ const Reservation = () => {
   ];
 
   const onSubmit =async (data: ReservationForm) => {
-    const res = await fetch("/api/reservation", {
+    const res = await fetch("/api/reservation",{
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
 
   if (res.ok) {
-    console.log("Réservation enregistrée ✅")
-      toast({
-      title: "Réservation confirmée ✅!",
-      description:`Merci ${data.lastName} pour votre réservation. Un email de confirmation vous a été envoyé.`,
+      
+      console.log("Données de réservation:", data);
 
-    });
+    console.log("Réservation enregistrée ✅")
+    toast.success(`Réservation confirmée ✅
+      Merci ${data.firstName} pour votre réservation.
+       Un email de confirmation vous a été envoyé.`);
+           setTimeout(() => {
+        router.push("/");
+      }, 3000);
   } else {
     console.error("Erreur lors de la réservation ❌")
+    toast.error("Erreur lors de la réservation ❌")
   }
    
     console.log("Données de réservation:", data);
