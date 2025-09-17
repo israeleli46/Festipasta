@@ -3,18 +3,18 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useSession ,signOut} from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Lock } from "lucide-react";
 
 const FestivalHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [choose, setChoose] = useState(false);
- const { data: session } = useSession();
+  const { data: session } = useSession();
 
   const navItems = [
-  
+
     { label: " Au Programme", href: "#program" },
-        { label: "Infos Pratiques", href: "#info" },
+    { label: "Infos Pratiques", href: "#info" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -24,9 +24,9 @@ const FestivalHeader = () => {
         <nav className="flex items-center justify-between h-16">
           <div className="font-bold text-xl text-festival-green">
             <Link href="/" id="home">
-               Festival des Pâtes
+              Festival des Pâtes
             </Link>
-         
+
           </div>
 
           {/* Desktop Navigation */}
@@ -45,27 +45,27 @@ const FestivalHeader = () => {
                 Réserver
               </Button>
             </Link>
-             <Link href="/stand" id="stands-button" className="text-festival-grey hover:text-festival-green transition-colors">
+            <Link href="/stand" id="stands-button" className="text-festival-grey hover:text-festival-green transition-colors">
               <Button variant="ghost" size="sm" >
                 Réserver votre stand
               </Button>
             </Link>
-           
-        {session ? (
-        <div>
-          Bonjour {session.user?.name} !
-          
-          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm" onClick={() => signOut()}>Déconnexion</Button>
-          
-        </div>
-      ) : (
-        <div>
-          <Link href="/admin">
-          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm">Admin <Lock size={18} /></Button></Link>
-        </div>
-      )}
-        
-            
+
+            {session ? (
+              <div>
+                Bonjour {session.user?.name} !
+
+                <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm" onClick={() => signOut()}>Déconnexion</Button>
+
+              </div>
+            ) : (
+              <div>
+                <Link href="/admin">
+                  <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm">Admin <Lock size={18} /></Button></Link>
+              </div>
+            )}
+
+
           </div>
 
           {/* Mobile Menu Button */}
@@ -101,21 +101,21 @@ const FestivalHeader = () => {
                   Réserver votre stand
                 </Button>
               </Link>
-               {session ? (
-        <div className="text-center mt-3">
-          Bonjour {session.user?.name} !
-          
-          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm" onClick={() => signOut()}>Déconnexion</Button>
-          
-        </div>
-      ) : (
-        <div className="text-center mt-4 ">
-          <Link href="/admin">
-          <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm">Admin <Lock size={12} /></Button></Link>
-        </div>
-      )}
+              {session ? (
+                <div className="text-center mt-3">
+                  Bonjour {session.user?.name} !
+                  
+                  <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm" onClick={() => signOut()}>Déconnexion</Button>
+
+                </div>
+              ) : (
+                <div className="text-center mt-4 ">
+                  <Link href="/login">
+                    <Button className="bg-gray-300 text-white px-4 py-2 full-rounded hover:bg-red-500" size="sm">Admin <Lock size={12} /></Button></Link>
+                </div>
+              )}
             </div>
-           
+
           </div>
         )}
       </div>

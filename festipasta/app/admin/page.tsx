@@ -10,7 +10,7 @@ export default async function AdminPage() {
 
   if (!session) {
     redirect("/login"); 
-    console.log('it woks')// pas connecté → login
+   // pas connecté → login
   }
 
   if (session.user.role !== "admin") {
